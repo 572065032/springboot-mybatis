@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.spring.springboot.dao.user.UserDao">
+	<resultMap id="BaseResultMap" type="com.buchou.domain.user.User">
+		<result column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="password" property="password" />
+		<result column="phone" property="phone" />
+		<result column="idcard" property="idcard" />
+	</resultMap>
+
+	<parameterMap id="City" type="com.buchou.domain.user.User"/>
+
+	<sql id="Base_Column_List">
+		id, username, password, phone,idcard
+	</sql>
+
+	<select id="findByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from city
+		where city_name = #{cityName}
+	</select>
+
+	<!-- 保存对象 -->
+	<insert id="insert" parameterType="com.buchou.domain.user.User" useGeneratedKeys="true" keyProperty="id">
+		insert into buchou_user (id,username,password,phone,idcard)values (#{id,jdbcType=INTEGER},#{username,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{idcard,jdbcType=VARCHAR})
+	</insert>
+
+	<!-- 根据对象主键更新 -->
+	<update id="update" parameterType="com.buchou.domain.user.User" >
+		update buchou_user
+		set
+		username = #{username,jdbcType=VARCHAR},
+		password = #{password,jdbcType=VARCHAR},
+		phone = #{phone,jdbcType=VARCHAR},
+		idcard = #{idcard,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!--  查找记录-->
+	<select id="selectList" parameterType="com.buchou.domain.user.User" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM buchou_user
+		where 1=1
+		<if test="id != null ">
+			AND  id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="username != null  and '' != username">
+			AND username= #{username,jdbcType=VARCHAR}
+		</if>
+		<if test="password != null and '' != password ">
+			AND password = #{password,jdbcType=VARCHAR}
+		</if>
+		<if test="phone != null and '' != phone ">
+			AND phone = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="idcard != null and '' != idcard ">
+			AND idcard = #{idcard,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+</mapper>
